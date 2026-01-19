@@ -1,0 +1,75 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Start Voting{% endblock %}</title>
+
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+  {% include 'includes/navBar.html' %}
+
+  <div class="form-container">
+    <h2>Please select your team and department</h2>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="dropdown-row">
+        
+        <div class="dropdown-field">
+          <label for="{{ form.team.id_for_label }}">Team:</label>
+          {{ form.team|add_class:"custom-select" }}
+        </div>
+
+        <div class="dropdown-field">
+          <label for="{{ form.department.id_for_label }}">Department:</label>
+          {{ form.department|attr:"disabled:true"|add_class:"custom-select" }}
+
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <button class="button button-blue" type="submit">Next</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Wait for the DOM to load
+    document.addEventListener('DOMContentLoaded', function() {
+      var teamSelect = document.getElementById('{{ form.team.id_for_label }}');
+      var departmentSelect = document.getElementById('{{ form.department.id_for_label }}');
+
+      var teamDepartments = {
+          '1': 'HR',
+          '2': 'Engineering',
+          '3': 'Marketing',
+          '4': 'Design',
+          '5': 'Sales'
+      };
+
+      teamSelect.addEventListener('change', function() {
+          var selectedTeam = this.value;
+          var department = teamDepartments[selectedTeam];
+
+          // Clear existing department options
+          departmentSelect.innerHTML = '';
+
+          // Add the new department as the only option
+          if (department) {
+              var option = document.createElement('option');
+              option.value = department;
+              option.text = department;
+              departmentSelect.appendChild(option);
+          }
+      });
+    });
+  </script>
+
+</body>
+</html>

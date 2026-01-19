@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome - Sky Health Check</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+
+</head>
+<body>
+
+  {% include 'includes/navbar.html' %}
+
+  <div class="content">
+    <a href="{% url 'register' %}" class="welcome-button">Staff Sign up</a>
+    <a href="{% url 'login' %}" class="welcome-button">Staff Sign in</a>
+
+  </div>
+
+</body>
+</html>
+</html>

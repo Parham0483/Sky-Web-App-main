@@ -1,0 +1,94 @@
+{% load static %}
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Submit Vote{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+  {% include 'includes/navBar.html' %}
+
+  <div class="container">
+
+    <h2 class="card-title">{{ card.name }}</h2>
+
+    <form method="post" action="{% url 'submit_vote' card.id %}" class="vote-form">
+      {% csrf_token %}
+
+      <div class="card-instructions">
+        <p><strong>Click one of the colours depending on how <span class="highlight">you</span> feel:</strong></p>
+      </div>
+
+      <div class="color-circles">
+        {% for radio in form.color %}
+          <label class="color-circle-option {{ radio.choice_label|lower }}">
+            {{ radio.tag }}
+            <div class="circle-label">
+              <strong>{{ radio.choice_label }}:</strong>
+              {% if radio.choice_label == "Red" %}
+                It is getting worse around this aspect and requires urgent attention.
+              {% elif radio.choice_label == "Yellow" %}
+                There are some concerns however you are more or less stable.
+              {% elif radio.choice_label == "Green" %}
+                It is going well and you are happy with this aspect.
+              {% endif %}
+            </div>
+          </label>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label>Select a state:</label>
+        <div class="progress-radio-group">
+          {% for radio in form.progress %}
+            <label class="progress-option">
+              {{ radio.tag }}
+              <span>{{ radio.choice_label }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="{{ form.note.id_for_label }}">Comments:</label>
+        {{ form.note|add_class:"comment-box" }}
+      </div>
+
+      <div class="navigation-buttons">
+        {% if prev_card_id %}
+          <a href="{% url 'submit_vote' prev_card_id %}" class="button button-blue">Back</a>
+        {% endif %}
+        <button type="submit" class="button button-blue">Next</button>
+      </div>
+    </form>
+
+    <div class="progress-info mt-4 text-center">
+      <p><strong>Card {{ current_index }} of {{ total_cards }}</strong></p>
+      <p><strong>Progress: {{ progress_percentage|default:"0" }}%</strong></p>
+
+      <!-- native <progress> bar -->
+      <progress
+        id="progress-bar"
+        class="sky-progress"
+        max="100"
+        value="{{ progress_percentage|default:"0" }}"
+      ></progress>
+    </div>
+
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var bar = document.getElementById('progress-bar');
+      if (!bar) return;
+      // ensure it's numeric
+      var pct = parseInt('{{ progress_percentage|default:"0" }}', 10) || 0;
+      bar.value = pct;
+    });
+  </script> 
+
+</body>
+</html>

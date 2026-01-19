@@ -1,0 +1,35 @@
+{% load static %}
+<nav class="navbar">
+  <div class="navbar-content container">
+    <a href="{% url 'home' %}">
+      <img src="{% static 'images/skyLogo.webp' %}" alt="Logo" class="navbar-logo">
+    </a>
+    <div class="navbar-links">
+      {% if user.is_authenticated %}
+        {% if user_role == 'Admin' %}
+          <a href="{% url 'admin:index' %}">Admin</a>
+        {% else %}
+          <a href="{% url 'home' %}">Home</a>
+
+          {# only Engineers & Team Leaders see Voting #}
+          {% if user_role in voting_roles %}
+            <a href="{% url 'start_voting' %}">Voting</a>
+          {% endif %}
+
+          {# Team Leaders, Dept Leaders & Senior Managers see Trends #}
+          {% if user_role in trends_roles %}
+            <a href="{% url 'trends' %}">Trends</a>
+          {% endif %}
+        {% endif %}
+
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'logout' %}">Logout</a>
+
+      {% else %}
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'register' %}">Register</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
+<div class="pink-divider"></div>

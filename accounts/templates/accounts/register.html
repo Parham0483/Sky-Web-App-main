@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Staff Sign Up</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper input {
+      padding-right: 40px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 12px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--input-border);
+      font-size: 18px;
+    }
+
+    .password-rules {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .password-rules li {
+      color: red;
+    }
+
+    .password-rules li.valid {
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  {% include 'includes/navbar.html' %}
+
+  <div class="form-container">
+    <h2 class="card-title">Sign up: <span class="highlight">Staff</span></h2>
+
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+          <li style="color: red;">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <form method="POST">
+      {% csrf_token %}
+
+      <!-- Full Name -->
+      <div class="form-row">
+        <label for="name">Full Name</label>
+        <input type="text" name="name" id="name" placeholder="Enter Full Name" required>
+      </div>
+
+      <!-- Email -->
+      <div class="form-row">
+        <label for="email">Email Address</label>
+        <input type="email" name="email" id="email" placeholder="Enter Email Address" required>
+      </div>
+
+      <!-- Password -->
+      <div class="form-row">
+        <label for="password">Password</label>
+        <div class="password-wrapper">
+          <input type="password" name="password" id="password" placeholder="Enter Password" required>
+          <span class="toggle-password" onclick="togglePassword('password', this)">👁️</span>
+        </div>
+        <ul class="password-rules" id="passwordRules">
+          <li id="length">At least 8 characters</li>
+          <li id="uppercase">At least one uppercase letter</li>
+          <li id="lowercase">At least one lowercase letter</li>
+          <li id="number">At least one number</li>
+          <li id="symbol">At least one special character</li>
+        </ul>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-row">
+        <label for="confirm_password">Confirm Password</label>
+        <div class="password-wrapper">
+          <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required>
+          <span class="toggle-password" onclick="togglePassword('confirm_password', this)">👁️</span>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-actions">
+        <button type="submit" class="button">Sign up</button>
+      </div>
+
+      <!-- Login Link -->
+      <p style="text-align:center; margin-top: 1rem;">
+        Already have an account?
+        <a href="{% url 'login' %}" style="color: var(--sky-pink); font-weight: bold;">Log in</a>
+      </p>
+    </form>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    function togglePassword(fieldId, icon) {
+      const input = document.getElementById(fieldId);
+      const type = input.type === "password" ? "text" : "password";
+      input.type = type;
+      icon.textContent = type === "password" ? "👁️" : "🙈";
+    }
+
+    const password = document.getElementById('password');
+    password.addEventListener('input', function () {
+      const value = password.value;
+      document.getElementById('length').classList.toggle('valid', value.length >= 8);
+      document.getElementById('uppercase').classList.toggle('valid', /[A-Z]/.test(value));
+      document.getElementById('lowercase').classList.toggle('valid', /[a-z]/.test(value));
+      document.getElementById('number').classList.toggle('valid', /[0-9]/.test(value));
+      document.getElementById('symbol').classList.toggle('valid', /[^A-Za-z0-9]/.test(value));
+    });
+
+    const form = document.querySelector("form");
+    form.addEventListener("submit", function (e) {
+      const pw = document.getElementById("password");
+      const cpw = document.getElementById("confirm_password");
+
+      if (pw.value !== cpw.value) {
+        e.preventDefault();
+        alert("Passwords do not match!");
+        return;
+      }
+
+      const valid = document.querySelectorAll('.password-rules li.valid').length === 5;
+      if (!valid) {
+        e.preventDefault();
+        alert("Password does not meet all the strength requirements.");
+      }
+    });
+  </script>
+
+</body>
+</html>

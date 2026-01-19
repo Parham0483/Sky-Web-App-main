@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Voting Trends</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  {% include 'includes/navBar.html' %}
+
+
+
+  <div class="container">
+    <h2 style="text-align: center;">States and trends</h2>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 2rem;">
+      {% for card in cards %}
+        <a href="{% url 'topic_trend_detail' card.id %}" class="trend-button">{{ card.name }}</a>
+      {% empty %}
+        <p>No health cards found.</p>
+      {% endfor %}
+    </div>     
+  </div>
+</body>
+</html>
+

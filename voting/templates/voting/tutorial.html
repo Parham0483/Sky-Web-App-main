@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tutorial - Sky Health Check</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+  {% include 'includes/navbar.html' %}
+  <style>
+    .pink-divider {
+      margin-bottom: 0;
+    }
+    .content {
+      padding-top: 0 !important;
+      margin-top: 0 !important;
+    }
+  </style>
+  
+
+  <div class="content">
+    <div class="container" style="text-align: center;">
+      <h1>Tutorial to completing health check</h1>
+
+      <ol style="text-align: left; max-width: 700px; margin: auto; font-size: 1.2rem;">
+        <li><strong>Each question will have the name of the topic on top</strong></li>
+
+        <li><strong>Use the buttons to select a state depending on how you feel around that topic:</strong>
+          <div class="color-circles">
+            <div class="color-circle-option green">
+              <input type="radio" disabled checked>
+              <span class="circle-label">Green: It’s going well and you're happy with that question</span>
+            </div>
+            <div class="color-circle-option yellow">
+              <input type="radio" disabled checked>
+              <span class="circle-label">Yellow: There are some concerns but it’s stable</span>
+            </div>
+            <div class="color-circle-option red">
+              <input type="radio" disabled checked>
+              <span class="circle-label">Red: It’s getting worse and needs urgent help</span>
+            </div>
+          </div>
+        </li>
+
+        <li><strong>Use the drop down menu to select a trend for each aspect</strong></li>
+        <li><strong>You will be able to add comments in any of the three text fields provided</strong></li>
+        <li><strong>Click continue once done</strong></li>
+      </ol>
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-actions">
+          <button class="button button-blue" type="submit">Continue</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>
